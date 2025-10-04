@@ -12,6 +12,28 @@ pipx install git+https://github.com/jkerdreux-imt/scanserv-py.git
 pipx install .
 ```
 
+## Configuration
+
+Create a configuration file:
+- Linux/Mac: `~/.config/scanserv/config.toml`
+- Windows: `%APPDATA%/scanserv/config.toml`
+
+Example configuration:
+```toml
+# Server settings
+server = "http://scan.home"
+
+# Default scan settings
+[scan]
+resolution = 200
+mode = "Color"     # Color, Gray, or Lineart
+quality = "high"   # high, medium, or low
+
+# Default file settings
+[files]
+output_dir = "scans"  # Default download directory
+```
+
 ## CLI Usage
 
 List scanners and files (default):

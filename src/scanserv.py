@@ -5,8 +5,50 @@ import os
 import argparse
 from datetime import datetime
 import sys
+import tomli
+from pathlib import Path
 
 __version__ = '0.1.0'
+
+def get_config_path():
+    """Get the path to the config file based on the platform"""
+    if os.name == 'nt':  # Windows
+        config_dir = os.path.join(os.getenv('APPDATA'), 'scanserv')
+    else:  # Linux/Mac
+        config_dir = os.path.join(os.path.expanduser('~'), '.config', 'scanserv')
+    
+    return os.path.join(config_dir, 'config.toml')
+
+def load_config():
+    """Load configuration from file, returns defaults if no file exists"""
+    config_path = get_config_path()
+    
+    defaults = {
+        'server': 'http://scan.home',
+        'scan': {
+            'resolution': 200,
+            'mode': 'Color',
+            'quality': 'high'
+        },
+        'files': {
+            'output_dir': 'scans'
+        }
+    }
+    
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'rb') as f:
+                config = tomli.load(f)
+                # Merge with defaults to ensure all keys exist
+                if 'scan' not in config:
+                    config['scan'] = defaults['scan']
+                if 'files' not in config:
+                    config['files'] = defaults['files']
+                return config
+        except Exception as e:
+            print(f"Warning: Error reading config file: {e}")
+            return defaults
+    return defaults
 
 class Scanner:
     def __init__(self, server_url="http://scan.home"):
@@ -207,10 +249,13 @@ class Scanner:
             return None
 
 def main():
+    # Load configuration
+    config = load_config()
+    
     parser = argparse.ArgumentParser(description='Scanner command line interface')
     
-    parser.add_argument('--server', default='http://scan.home',
-                      help='Scanner server URL (default: http://scan.home)')
+    parser.add_argument('--server', default=config.get('server'),
+                      help=f'Scanner server URL (default: {config.get("server")})')
     parser.add_argument('--device', type=int, default=1,
                       help='Scanner number (default: 1)')
     parser.add_argument('--list', action='store_true',
@@ -223,14 +268,16 @@ def main():
                       help='Download all scanned files from server')
     parser.add_argument('--download', type=str, metavar='FILENAME',
                       help='Download a specific file from server')
-    parser.add_argument('--output-dir',
-                      help='Output directory for downloaded files (default: current directory)')
-    parser.add_argument('--resolution', type=int, default=200,
-                      help='Scan resolution in DPI (default: 200)')
-    parser.add_argument('--mode', choices=['Color', 'Gray', 'Lineart'], default='Color',
-                      help='Color mode (default: Color)')
-    parser.add_argument('--quality', choices=['high', 'medium', 'low'], default='high',
-                      help='Image quality (default: high)')
+    parser.add_argument('--output-dir', default=config['files'].get('output_dir'),
+                      help=f'Output directory for downloaded files (default: {config["files"].get("output_dir")})')
+    parser.add_argument('--resolution', type=int, default=config['scan'].get('resolution'),
+                      help=f'Scan resolution in DPI (default: {config["scan"].get("resolution")})')
+    parser.add_argument('--mode', choices=['Color', 'Gray', 'Lineart'], 
+                      default=config['scan'].get('mode'),
+                      help=f'Color mode (default: {config["scan"].get("mode")})')
+    parser.add_argument('--quality', choices=['high', 'medium', 'low'], 
+                      default=config['scan'].get('quality'),
+                      help=f'Image quality (default: {config["scan"].get("quality")})')
 
     args = parser.parse_args()
 
