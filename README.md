@@ -22,6 +22,7 @@ Example configuration:
 ```toml
 # Server settings
 server = "http://scan.home"
+device = 1  # Scanner number (1-based index)
 
 # Default scan settings
 [scan]
@@ -68,8 +69,15 @@ from scanserv import Scanner
 # Create scanner instance
 scanner = Scanner(server_url="http://scan.home")
 
-# List available scanners
+# List available scanners and their numbers
 devices = scanner.list_scanners()
+# Output:
+# Available scanners:
+# 1. ID: airscan:w0:Brother DCP-L2620DW
+#    Name: Brother DCP-L2620DW
+
+# Select scanner by its number (1-based index)
+scanner.select_scanner(1)
 
 # Scan document
 scanner.scan_a4(

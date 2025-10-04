@@ -25,6 +25,7 @@ def load_config():
     
     defaults = {
         'server': 'http://scan.home',
+        'device': 1,
         'scan': {
             'resolution': 200,
             'mode': 'Color',
@@ -44,6 +45,8 @@ def load_config():
                     config['scan'] = defaults['scan']
                 if 'files' not in config:
                     config['files'] = defaults['files']
+                if 'device' not in config:
+                    config['device'] = defaults['device']
                 return config
         except Exception as e:
             print(f"Warning: Error reading config file: {e}")
@@ -256,8 +259,8 @@ def main():
     
     parser.add_argument('--server', default=config.get('server'),
                       help=f'Scanner server URL (default: {config.get("server")})')
-    parser.add_argument('--device', type=int, default=1,
-                      help='Scanner number (default: 1)')
+    parser.add_argument('--device', type=int, default=config.get('device'),
+                      help=f'Scanner number (default: {config.get("device")})')
     parser.add_argument('--list', action='store_true',
                       help='List available scanners')
     parser.add_argument('--scan', action='store_true',
