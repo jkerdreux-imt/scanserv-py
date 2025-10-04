@@ -50,7 +50,7 @@ scanserv --scan --no-download  # Keep file on server only
 
 Download files:
 ```bash
-scanserv --download "scan_2023.jpg"      # Download specific file
+scanserv --download "scan_2025-10-04 20.30.30.jpg"      # Download specific file
 scanserv --download-all                   # Download all files
 scanserv --download-all --output-dir docs # Download to specific directory
 ```
