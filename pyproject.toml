@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scanserv"
+version = "0.1.0"
+description = "CLI and Python module for scanservjs"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = ["requests"]
+authors = [
+    {name = "Jérôme Kerdreux", email = "jerome.kerdreux@imt-atlantique.fr"},
+]
+urls = {Homepage = "https://github.com/jkerdreux-imt/scanserv-py"}
+
+[project.scripts]
+scanserv = "scanserv:main"
+
+[tool.setuptools]
+py-modules = ["scanserv"]
+
+[tool.setuptools.package-dir]
+"" = "src"
