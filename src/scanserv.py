@@ -186,7 +186,7 @@ class Scanner:
         Args:
             output_dir (str, optional): Directory to save scanned files. If None, don't download
             resolution (int): DPI resolution (default: 200)
-            mode (str): Color mode - "Color", "Gray", or "Lineart" (default: "Color")
+            mode (str): Color mode - "Color", "Gray" (default: "Color")
             quality (str): Quality level - "high", "medium", or "low" (default: "high")
         
         Returns:
@@ -275,7 +275,7 @@ def main():
                       help=f'Output directory for downloaded files (default: {config["files"].get("output_dir")})')
     parser.add_argument('--resolution', type=int, default=config['scan'].get('resolution'),
                       help=f'Scan resolution in DPI (default: {config["scan"].get("resolution")})')
-    parser.add_argument('--mode', choices=['Color', 'Gray', 'Lineart'], 
+    parser.add_argument('--mode', choices=['Color', 'Gray'], 
                       default=config['scan'].get('mode'),
                       help=f'Color mode (default: {config["scan"].get("mode")})')
     parser.add_argument('--quality', choices=['high', 'medium', 'low'], 
